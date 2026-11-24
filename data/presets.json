@@ -1,0 +1,21 @@
+{
+  "titanic-1912": [
+    {"question": "Is the Titanic being towed to Halifax?", "cutoff": "1912-04-15", "label": "Is she being towed to Halifax?"},
+    {"question": "Has the Titanic sunk?", "cutoff": "1912-04-15"},
+    {"question": "Was the Titanic really unsinkable?", "cutoff": "1912-04-15"},
+    {"question": "How many papers say the passengers were saved?", "cutoff": "1912-04-15", "label": "How many papers say all were saved?"},
+    {"question": "How many survivors are on the Carpathia?", "cutoff": "1912-04-16"}
+  ],
+  "lehman-2008": [
+    {"question": "What is Lehman doing to raise money?", "cutoff": "2008-09-11"},
+    {"question": "Should I be worried about my savings?", "cutoff": "2008-09-12"},
+    {"question": "Will anyone buy Lehman's business now?", "cutoff": "2008-09-15"},
+    {"question": "What happens to Lehman's staff in London?", "cutoff": "2008-09-16"}
+  ],
+  "titan-2023": [
+    {"question": "Who is on board the Titan?", "cutoff": "2023-06-19T18:00:00-04:00"},
+    {"question": "Is there still hope for the people on the Titan?", "cutoff": "2023-06-20T14:00:00-04:00", "label": "Is there still hope?"},
+    {"question": "How much oxygen do they have left on the Titan submersible?", "cutoff": "2023-06-20T14:00:00-04:00", "label": "How much oxygen is left?"},
+    {"question": "Was the sub safe?", "cutoff": "2023-06-20T14:00:00-04:00"}
+  ]
+}
