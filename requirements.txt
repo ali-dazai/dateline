@@ -1,0 +1,13 @@
+litellm
+python-dotenv
+pandas
+pyarrow
+matplotlib
+tabulate
+rapidfuzz
+bm25s
+fastapi
+uvicorn
+requests
+pytest
+httpx

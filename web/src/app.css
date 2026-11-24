@@ -1,0 +1,69 @@
+/* Base page and the transitions between the start page and the three story looks.
+   Layer classes: `in-<view>-from-<view>` on the page arriving, `out-<view>-to-<view>` on the page leaving.
+   Views: start, plates (1912), highlighter (2008), abyss (2023). */
+html, body, #root { height: 100%; margin: 0; }
+body { background: #111111; -webkit-font-smoothing: antialiased; }
+
+.ly { position: fixed; inset: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
+.ly-hidden { display: none; }
+.ly-show { z-index: 2; }
+.ly-exit { pointer-events: none; overflow: hidden; }
+
+/* Start page <-> story: the band grows into the page, and the page shrinks back into its band. */
+@keyframes swFromBand { from { clip-path: inset(var(--bt) 0 var(--bb) 0) } to { clip-path: inset(0 0 0 0) } }
+@keyframes swToBand {
+  0% { clip-path: inset(0 0 0 0); opacity: 1 }
+  85% { clip-path: inset(var(--bt) 0 var(--bb) 0); opacity: 1 }
+  100% { clip-path: inset(var(--bt) 0 var(--bb) 0); opacity: 0 }
+}
+@keyframes swHold { 0%, 99% { opacity: 1 } 100% { opacity: 0 } }
+.in-plates-from-start, .in-highlighter-from-start, .in-abyss-from-start { z-index: 2; animation: swFromBand 950ms cubic-bezier(.75,0,.2,1) both; }
+.in-plates-from-start { --pd: 650ms; }
+.in-abyss-from-start { --nd: 700ms; }
+.out-start-to-plates, .out-start-to-highlighter, .out-start-to-abyss { z-index: 1; animation: swHold 950ms both; }
+.in-start-from-plates, .in-start-from-highlighter, .in-start-from-abyss { z-index: 1; }
+.out-plates-to-start, .out-highlighter-to-start, .out-abyss-to-start { z-index: 3; animation: swToBand 850ms cubic-bezier(.6,0,.25,1) both; }
+
+/* 1912 -> 2008: the page is photocopied, then a scanner bar reveals the copy. */
+@keyframes swPhotocopy { 0% { filter: none; opacity: 1 } 45% { filter: grayscale(1) contrast(1.6) brightness(1.08); opacity: 1 } 100% { filter: grayscale(1) contrast(1.6); opacity: 0 } }
+@keyframes swScanReveal { from { clip-path: inset(0 0 100% 0) } to { clip-path: inset(0 0 0 0) } }
+@keyframes swScanBar { 0% { top: -10px; opacity: 1 } 92% { opacity: 1 } 100% { top: 100vh; opacity: 0 } }
+.out-plates-to-highlighter { z-index: 1; animation: swPhotocopy 1150ms ease-in both; }
+.in-highlighter-from-plates { z-index: 2; animation: swScanReveal 950ms cubic-bezier(.45,0,.3,1) 260ms both; }
+.sw-scanbar { position: fixed; left: 0; right: 0; top: -10px; height: 10px; z-index: 5; pointer-events: none; background: #FFFFFF;
+  box-shadow: 0 0 40px 18px rgba(200,230,255,.85), 0 0 120px 40px rgba(120,170,255,.45); animation: swScanBar 950ms cubic-bezier(.45,0,.3,1) 260ms both; }
+
+/* Anything -> 2023: the old page scatters or recedes into a phone, then the screen wakes. */
+@keyframes swScatter { to { opacity: 0; transform: scale(1.07); filter: blur(10px) } }
+@keyframes swWake { 0% { opacity: 0; filter: brightness(.1); transform: scale(1.035) } 100% { opacity: 1; filter: none; transform: none } }
+@keyframes swRecede { 0% { transform: none; border-radius: 0; opacity: 1 } 65% { transform: scale(.27); border-radius: 120px; opacity: 1 } 100% { transform: scale(.25); border-radius: 120px; opacity: 0 } }
+.out-plates-to-abyss { z-index: 1; animation: swScatter 650ms ease-in both; }
+.out-highlighter-to-abyss { z-index: 1; animation: swRecede 820ms cubic-bezier(.6,0,.3,1) both; }
+.in-abyss-from-plates, .in-abyss-from-highlighter { z-index: 2; animation: swWake 900ms cubic-bezier(.2,.7,.2,1) 520ms both; --nd: 1100ms; }
+
+/* 2008 -> 1912: the photocopies slide off, the older page ages in. */
+@keyframes swSheetsOut { to { transform: translateY(34%) rotate(-3deg); opacity: 0 } }
+@keyframes swAgeIn { 0% { opacity: 0; filter: grayscale(1) contrast(1.4) } 100% { opacity: 1; filter: none } }
+.out-highlighter-to-plates { z-index: 1; animation: swSheetsOut 720ms cubic-bezier(.5,0,.75,0) both; }
+.in-plates-from-highlighter { z-index: 2; animation: swAgeIn 900ms ease-out 320ms both; --pd: 900ms; }
+
+/* 2023 -> older: the screen sleeps, then ink comes up or a printout feeds in. */
+@keyframes swSleep { 0% { filter: brightness(1) } 55% { filter: brightness(0) } 100% { filter: brightness(0); opacity: 0 } }
+@keyframes swInkIn { 0% { opacity: 1; filter: brightness(0) } 100% { opacity: 1; filter: none } }
+@keyframes swPrintIn { from { transform: translateY(100%) } to { transform: none } }
+.out-abyss-to-plates, .out-abyss-to-highlighter { z-index: 1; animation: swSleep 700ms ease-in both; }
+.in-plates-from-abyss { z-index: 2; animation: swInkIn 900ms ease-out 420ms both; --pd: 1050ms; }
+.in-highlighter-from-abyss { z-index: 2; animation: swPrintIn 850ms cubic-bezier(.2,.8,.2,1) 450ms both; }
+
+/* The arriving page's own entrance waits for the transition: plates register, notifications drop. */
+.ly[class*='in-plates-from'] .pl-plY { animation-delay: var(--pd, 0ms); }
+.ly[class*='in-plates-from'] .pl-plM { animation-delay: calc(var(--pd, 0ms) + 140ms); }
+.ly[class*='in-plates-from'] .pl-plC { animation-delay: calc(var(--pd, 0ms) + 280ms); }
+.ly[class*='in-abyss-from'] .ab-rise { animation-delay: var(--nd, 0ms); }
+.ly[class*='in-abyss-from'] .ab-held { animation-delay: calc(var(--nd, 0ms) + 140ms) !important; }
+.ly[class*='in-abyss-from'] .ab-clock { animation-delay: calc(var(--nd, 0ms) - 300ms); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ly, .sw-scanbar { animation: none !important; }
+  .ly-exit, .sw-scanbar { display: none; }
+}
